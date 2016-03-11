@@ -19,7 +19,7 @@ for item in $LISTS ; do
     url="${item#$name=}"
     echo "Processing $name list..."
     [ -f "$LIST_DIR/$name.gz" ] || wget -O "$LIST_DIR/$name.gz" "$url"
-    for net in $(cat $LIST_DIR/$name.gz | gunzip | cut -d ':' -f 2 | grep -E '^[-0-9.]+$') ; do
+    for net in $(zcat $LIST_DIR/$name.gz | cut -d ':' -f 2 | grep -E '^[-0-9.]+$') ; do
         ipset add $name $net
     done
 done
