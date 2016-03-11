@@ -1,0 +1,25 @@
+#!/bin/sh
+
+[ "$1" = "start" ] || exit
+
+logger -t $(basename $0) 'started'
+
+LISTS=" \
+    TorNodes=http://list.iblocklist.com/?list=togdoptykrlolpddwbvz&fileformat=p2p&archiveformat=gz \
+    Microsoft=http://list.iblocklist.com/?list=xshktygkujudfnjfioro&fileformat=p2p&archiveformat=gz \
+    China=http://list.iblocklist.com/?list=cn&fileformat=p2p&archiveformat=gz \
+"
+
+LIST_DIR='/opt/var'
+
+[ -d "$LIST_DIR" ] || mkdir -p $LIST_DIR
+
+for item in $LISTS ; do
+    name="$(echo $item | cut -d '=' -f 1)"
+    url="${item#$name=}"
+    echo "Processing $name list..."
+    [ -f "$LIST_DIR/$name.gz" ] || wget -O "$LIST_DIR/$name.gz" "$url"
+    for net in $(cat $LIST_DIR/$name.gz | gunzip | cut -d: -f2 | grep -E "^[-0-9.]+$") ; do
+        ipset add $name $net
+    done
+done
