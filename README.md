@@ -1,7 +1,7 @@
 # ipset
 This [ipset](http://ipset.netfilter.org/) usage example will show how to:
-* block incoming connections from TOR nodes and\or China (sorry, guys. Every PPTP brutforce try comes from your IPs).
-* block transit traffic from\to Microsoft servers, but leave Skype working.
+* block incoming connections from TOR nodes and China (sorry, guys. Every PPTP brute force try comes from your IPs).
+* block transit traffic from and to Microsoft servers, but leave Skype working.
 
 ## Prerequisites
 * Padavan firmware with ipset (every build type except nano),
@@ -49,7 +49,7 @@ ipset -N China nethash hashsize 2048
 ipset -N Microsoft nethash
 ipset -N Skype iphash
 ```
-* Now switch to `LAN > DHCP Server` page and add this line to `Custom Configuration File "dnsmasq.conf"` field:
+* Now switch to `LAN > DHCP Server` page and add this line to `Custom Configuration File "dnsmasq.conf"` field to automagically add all returned IP adresses for lookups to (*.)skype.net to the ipset named "Skype":
 ```
 ipset=/skype.net/Skype
 ```
